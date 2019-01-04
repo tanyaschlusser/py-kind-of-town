@@ -1,0 +1,503 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/white.css">
+    <link rel="stylesheet" href="css/zenburn.css"/>
+  </body>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h2>"Py" Kind of Town</h2>
+          <h4>Python in Chicago</h4>
+          <p>@tanyaschlusser—DuPage Python Meetup
+            <ul>
+              <li>slides: <a href="https://bit.ly/py-town-dupage">bit.ly/py-town-dupage</a></li>
+              <li>GitHub <a href="https://gist.github.com/tanyaschlusser/2854aa7a107c77eec841259ef334c9ab">gist</a></li>
+            </ul>
+          </p>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            <h3>$ whoami</h3>
+            ```shell
+            Tanya Schlusser
+            
+            - lives near Midway
+            - enthusiastic ChiPy member
+            - FORTRAN → R → Python (primary languages at various points)
+           ```
+          </textarea>
+          <aside class="notes">
+            I started coding professionally in 2011, but with a lot of engineering training
+            before that. I did big data analytics consulting and am a big fan of
+            data-driven decisions.
+
+            Oh, and I'm a coauthor of OReilly's "the Hitchhiker's Guide to Python" with
+            Kenneth Reitz (and the 200-odd online contributors.) All royalties go directly to
+            Django Girls.
+
+            I think it's awesome that you all are starting a Python meetup in DuPage.
+          </aside>
+        </section>
+        <section>
+          <h3>Who are you?</h3>
+          <p class="fragment">(from Meetup data)</p>
+          <aside class="notes">
+            Speaking of data-driven decisions, I had to figure out what to talk about
+            so I pulled other group memberships from the Meetup API. Here are some demographics:
+          </aside>
+        </section>
+        <section>
+          <h5>Membership stats (on 29 Dec 2018)</h5>
+          <ul>
+            <li style="width:100%;background-color:#84D6;white-space:nowrap;margin:.2em"><span style="padding-left:.2em">147 people </span><span style="color:#5558">in the DuPage Python group</span></li>
+            <li class="fragment" style="width:88%;background-color:#84D6;white-space:nowrap;margin:.2em"><span style="padding-left:.2em">88% </span><span style="color:#5558">— at least one other</span> Python <span style="color:#5558">group</span></li>
+            <li class="fragment" style="width:50%;background-color:#84D6;white-space:nowrap;margin:.2em"><span style="padding-left:.2em">50% </span><span style="color:#5558">— at least one</span> Data Science <span style="color:#5558">group</span></li>
+            <li class="fragment" style="width:33%;background-color:#84D6;white-space:nowrap;margin:.2em"><span style="padding-left:.2em">33% </span><span style="color:#5558">— at least one</span> infrastructure <span style="color:#5558">group</span></li>
+            <li class="fragment" style="width:27%;background-color:#84D6;white-space:nowrap;margin:.2em"><span style="padding-left:.2em">27% </span><span style="color:#5558">— at least one</span> R <span style="color:#5558">group</span></li>
+            <li class="fragment" style="width:23%;background-color:#84D6;white-space:nowrap;margin:.2em"><span style="padding-left:.2em">23% </span><span style="color:#5558">— at least one</span> front end <span style="color:#5558">group</span></li>
+          </ul>
+        </section>
+        <section>
+          <h5>Intersections</h5>
+          <button class="img-table-toggler" id="meetup_sets_png">Show data</button><br/>
+          <img src="img/py-kind-of-town/meetup_sets.png"
+               class="plain meetup_sets_png"
+               alt="Bar plot with a second diagram that annotates how set memberships and intersections work for each group. Click 'Show data' button for table."/>
+          <table class="meetup_sets_png" style="display:none;transform-origin:top center;transform:scale(0.42)">
+            <tr><th>Intersection</th><th>Count</th></tr>
+            <tr><td>only other Python groups</td><td>29</td></tr>
+            <tr><td>Python, R, and Data Science groups</td><td>18</td></tr>
+            <tr><td>all groups hidden</td><td>17</td></tr>
+            <tr><td>Python and Data Science groups</td><td>15</td></tr>
+            <tr><td>Python, Data Science, and infastructure groups</td><td>12</td></tr>
+            <tr><td>Python and infrastructure groups</td><td>11</td></tr>
+            <tr><td>all of R, Python, data science, infrastructure, and front end groups</td><td>7</td></tr>
+            <tr><td>all except R: Python, data science, infrastructure, and front end groups</td><td>7</td></tr>
+            <tr><td>Python and front end groups</td><td>7</td></tr>
+            <tr><td>Python, data science, and front end groups</td><td>6</td></tr>
+            <tr><td>all except front end: R, Python, data science, and infrastructure</td><td>6</td></tr>
+            <tr><td>R and Python groups</td><td>4</td></tr>
+            <tr><td>all except infrastructure: R, Python, front end, and data science</td><td>3</td></tr>
+            <tr><td>Python, infrastructure, and front end groups</td><td>3</td></tr>
+            <tr><td>R, Python, and infrastructure groups</td><td>1</td></tr>
+            <tr><td>R, Python, infrastructure and front end groups</td><td>1</td></tr>
+          </table>
+        </section>
+        <section>
+          <h5>Without R may be clearer</h5>
+          <button class="img-table-toggler" id="meetup_sets_no_r_png">Show data</button><br/>
+          <img src="img/py-kind-of-town/meetup_sets_no_R.png"
+               class="plain meetup_sets_no_r_png"
+               alt="Bar plot with a third diagram that annotates how set memberships and intersections work for each group, excluding R groups. Click 'Show data' button for table."/>
+          <table class="meetup_sets_no_r_png" style="display:none;transform-origin:top center;transform:scale(0.5)">
+            <tr><th>Intersection</th><th>Count</th></tr>
+            <tr><td>only other Python groups</td><td>33</td></tr>
+            <tr><td>Python and Data Science groups</td><td>33</td></tr>
+            <tr><td>Python, data science, and infrastructure groups</td><td>18</td></tr>
+            <tr><td>all groups hidden</td><td>17</td></tr>
+            <tr><td>all of Python, data science, infrastructure, and front end groups</td><td>14</td></tr>
+            <tr><td>Python and infastructure groups</td><td>12</td></tr>
+            <tr><td>Python, data science, and front end groups</td><td>9</td></tr>
+            <tr><td>Python and front end groups</td><td>7</td></tr>
+            <tr><td>Python, infrastructure, and front end groups</td><td>4</td></tr>
+          </table>
+        </section>
+        <section>
+          <h3>That was an <span class="code">upsetplot</span></h3>
+          <ul>
+            <li>Shows multiple set insersections</li>
+            <li>Lex, Gehlenborg, Strobelt, Romain, Pfister (2014)</li>
+            <li>Primary implementation: in the <a href="https://caleydo.org/tools/">Caleydo suite</a></li>
+            <li>R implementation: <a href="https://cran.r-project.org/web/packages/UpSetR/vignettes/basic.usage.html">UpSetR</a></li>
+            <li>Python implementation <a href="https://upsetplot.readthedocs.io/en/latest/">UpSetPlot</a> (unofficial)</li>
+          </ul>
+        </section>
+        <section>
+          <h3>Back story: 6-way Venn Diagram</h3>
+          <a href="https://caleydo.org/tools/upset/#why-upset">
+            <img src="https://caleydo.org/assets/images/projects/upset//banana.png"
+                 class="plain" style="width:50%"
+                 alt="Copy of a 6-way Venn Diagram from a famous Nature article (follow the hyperlink for more)
+                      that literally has a picture of a banana on it and a couple of totally weird squiggly shapes that's
+                      basically unreadable. It shows the relationship between the banana's genome and 5 other
+                      species. It was so unreadable it apparently inspired the authors to find a better way.
+                      The way is a bar chart of consecutive set intersections one after another that is pretty
+                      much the visual equivalent of the data listed on the 'alt' section of the last slide."></img>
+          </a>
+          <p>This figure (<a href="https://www.nature.com/articles/nature11241">Nature, 2012</a>) so offended the authors 😱 that they published a new method in 2014.</p>
+        </section>
+        <section>
+          <h3>Banana redo</h3>
+          <a href="https://caleydo.org/tools/upset/#why-upset">
+            <img src="https://caleydo.org/assets/images/projects/upset/upsetr-banana_clipped.png"
+                 class="plain" style="width:70%"
+                 alt="This one is a tiny figure so it's hard to read what it says, but the same unreadable
+                      banana diagram from before is plotted as a bar chart showing each separate set intersection
+                      and it is indeed very easy to tell which similarities are importand and which are not."></img>
+          </a>
+          <p>Here's the UpSet banana plot.<br/>(With most frequent intersections.)</p>
+        </section>
+        <section>
+          <h3>Description</h3>
+          <a href="https://caleydo.org/tools/upset/#upset-concept">
+            <img src="https://caleydo.org/assets/images/projects/upset//matrix.png"
+                 alt="This draws a three-way Venn diagram and one by one colors each section
+                      (A only, B only, C only, A and B, B and C, etcetera)
+                      and then colors a bar chart, with accompanying consecutive dots that indicate which
+                      intersection is depicted by that specific bar.
+                      It is much easier to understand."></img>
+          </a>
+          <p>(from <a href="https://caleydo.org/tools/upset/#upset-concept">their website</a>)</p>
+          <p>The dots denote intersections.</p>
+        </section>
+        <section>
+        <p>Here's their online viewer</p>
+        <iframe title="Free online visualizer for UpSet." src="https://vcg.github.io/upset/" style="width:100%;height:90%"></iframe>
+        </section>
+        <section>
+          <h3>Pnemonic: UpSet</h3>
+          <p>...Venn Diagrams shouldn't make you up-set!</p>
+        </section>
+        <section>
+          <h3>Meetup API</h3>
+          <p>How did I get the data?</p>
+          <ul>
+            <li>REST API that returns JSON-formatted text</li>
+            <li>Well-documented <a href="https://www.meetup.com/meetup_api/">meetup.com/meetup_api/</a></li>
+            <li>As of December 2018 you need a free API key</li>
+            <li>Many APIs, very detailed; paid users get more</li>
+          </ul>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+          Code to pull from Meetup API:
+
+          ```python
+          import time
+          import requests
+
+          api_url = "https://api.meetup.com"
+          group = "DuPage-Python-Meetup"
+          response = requests.get(f"{api_url}/{group}/members")
+          user_ids = [entry["id"] for entry in response.json()]
+          
+          apikey = 12345
+          all_users_groups = {}
+          for user_id in user_ids:
+              time.sleep(3)  # Meetup throttles you
+              result = requests.get(f"{api_url}/members/{user_id}?sign=True&key={apikey}&fields=memberships").json()
+              if "memberships" not in result:
+                  all_users_groups[user_id] = []
+              else:
+                  group_names = sorted(m["group"]["name"] for m in result["memberships"]["member"])
+                  all_users_groups[user_id] = group_names
+          ```
+          </textarea>
+        </section>
+        <section>
+          <h2>DuPage Python's interests are roughly</h2>
+          <p>(overlapping)</p>
+          <ul>
+            <li>&frac12; analytics</li>
+            <li>⅓ infrastructure</li>
+            <li>&frac14; web</li>
+          </ul>
+        </section>
+        <section>
+          <h2>And regional employers?</h2>
+          <p>based on a single-day job board snapshot &hellip;</p>
+          <ul>
+            <li> Free ones<br/>
+                <a href="https://stackoverflow.com/jobs?q=python&l=chicago">StackOverflow (RSS)</a> (great!)<br/>
+                <a href="https://jobs.github.com/api">GitHub API</a> (meh)
+            </li>
+            <li>Others not used (need a developer key)<br/>
+                <a href="http://www.dice.com/external/content/documentation/api.html">Dice</a>,
+                <a href="https://developer.linkedin.com/docs/rest-api">LinkedIn</a>,
+                <a href="https://developers.google.com/search/apis/indexing-api/v3/libraries">Google indexing</a>
+            </li>
+          </ul>
+        </section>
+        <section>
+          <h5>Stackoverflow Jobs (Chicago 30 Dec 2018)</h5>
+          <ul>
+            <li style="width:100%;background-color:#84D6;white-space:nowrap;margin:.2em">103 postings in the Chicago area right now</li>
+            <li style="width:29%;background-color:#84D6;white-space:nowrap;margin:.2em">29% Director / Manager / Project Manager jobs</li>
+            <li style="width:21%;background-color:#84D6;white-space:nowrap;margin:.2em">21% QA jobs</li>
+            <li style="width:18%;background-color:#84D6;white-space:nowrap;margin:.2em">18% Backend jobs</li>
+            <li style="width:11%;background-color:#84D6;white-space:nowrap;margin:.2em">11% Frontend jobs</li>
+            <li style="width:10%;background-color:#84D6;white-space:nowrap;margin:.2em">10% DevOps jobs</li>
+            <li style="width:7%;background-color:#84D6;white-space:nowrap;margin:.2em">7% Full Stack jobs</li>
+            <li style="width:4%;background-color:#84D6;white-space:nowrap;margin:.2em">4% Other developer jobs</li>
+            <li style="width:2%;background-color:#84D6;white-space:nowrap;margin:.2em">2% Security jobs</li>
+            <li style="width:0%;background-color:#84D6;white-space:nowrap;margin:.2em">0% Data Science jobs 😭</li>
+          </ul>
+        </section>
+        <section>
+          <h5>By employer</h5>
+          <ul>
+            <li style="width:100%;background-color:#84D6;white-space:nowrap;margin:.2em"><span style="padding-left:.2em">103 postings </span><span style="color:#5558">in the Chicago area</span></li>
+            <li style="width:51%;background-color:#84D6;white-space:nowrap;margin:.2em">51% Other companies</li>
+            <li style="width:25%;background-color:#84D6;white-space:nowrap;margin:.2em">25% JP Morgan Chase</li>
+            <li style="width:6%;background-color:#84D6;white-space:nowrap;margin:.2em">6% Uline</li>
+            <li style="width:5%;background-color:#84D6;white-space:nowrap;margin:.2em">5% Discover</li>
+            <li style="width:4%;background-color:#84D6;white-space:nowrap;margin:.2em">4% NextCapital</li>
+            <li style="width:3%;background-color:#84D6;white-space:nowrap;margin:.2em">3% Solstice</li>
+            <li style="width:3%;background-color:#84D6;white-space:nowrap;margin:.2em">3% Critical Mass</li>
+            <li style="width:3%;background-color:#84D6;white-space:nowrap;margin:.2em">3% Bridge Financial Technology</li>
+          </ul>
+        </section>
+        <section>
+          <h5>Tagged language(s) — there's overlap</h5>
+          <ul>
+            <li style="width:100%;background-color:#84D6;white-space:nowrap;margin:.2em"><span style="padding-left:.2em">103 postings </span><span style="color:#5558">in the Chicago area</span></li>
+            <li style="width:44%;background-color:#84D6;white-space:nowrap;margin:.2em">44% use Java</li>
+            <li style="width:43%;background-color:#84D6;white-space:nowrap;margin:.2em">43% use Python</li>
+            <li style="width:31%;background-color:#84D6;white-space:nowrap;margin:.2em">31% use SQL</li>
+            <li style="width:21%;background-color:#84D6;white-space:nowrap;margin:.2em">21% use Javscript</li>
+            <li style="width:11%;background-color:#84D6;white-space:nowrap;margin:.2em">11% use C++</li>
+            <li style="width:1%;background-color:#84D6;white-space:nowrap;margin:.2em">1% use Go</li>
+            <li style="width:1%;background-color:#84D6;white-space:nowrap;margin:.2em">1% use Scala</li>
+          </ul>
+        </section>
+        <section>
+          <h5>Intesections</h5>
+          <button class="img-table-toggler" id="stackoverflow_sets_png">Show data</button><br/>
+          <img src="img/py-kind-of-town/stackoverflow_sets.png"
+               class="plain stackoverflow_sets_png"
+               alt="Bar plot with a second diagram that annotates how set memberships and intersections work for each group. Click 'Show data' button for table."/>
+          <table class="stackoverflow_sets_png" style="display:none;transform-origin:top center;transform:scale(0.2)">
+            <tr><th>Intersection</th><th>Count</th></tr>
+            <tr><td>Java, Python, and SQL</td><td>Java, Python, and SQL</td></tr>
+            <tr><td>No tags</td><td>No tags</td></tr>
+            <tr><td>Java only</td><td>Java only</td></tr>
+            <tr><td>Javascript</td><td>Javascript</td></tr>
+            <tr><td>Java and javascript</td><td>Java and javascript</td></tr>
+            <tr><td>Sysadmin only</td><td>Sysadmin only</td></tr>
+            <tr><td>Linux and C++</td><td>Linux and C++</td></tr>
+            <tr><td>Amazon Web Services only</td><td>Amazon Web Services only</td></tr>
+            <tr><td>Javascript and React.js</td><td>Javascript and React.js</td></tr>
+            <tr><td>SQL and Javascript</td><td>SQL and Javascript</td></tr>
+            <tr><td>ReactJs only</td><td>ReactJs only</td></tr>
+            <tr><td>Javascript, AWS, and React.js</td><td>Javascript, AWS, and React.js</td></tr>
+            <tr><td>Python only</td><td>Python only</td></tr>
+            <tr><td>Python and C++</td><td>Python and C++</td></tr>
+            <tr><td>Python and javascript</td><td>Python and javascript</td></tr>
+            <tr><td>Java, Python, and linux</td><td>Java, Python, and linux</td></tr>
+            <tr><td>Automation only</td><td>Automation only</td></tr>
+            <tr><td>C++ only</td><td>C++ only</td></tr>
+            <tr><td>Linux and Sysadmin</td><td>Linux and Sysadmin</td></tr>
+            <tr><td>Amazon Web Services and automation</td><td>Amazon Web Services and automation</td></tr>
+            <tr><td>Amazon Web Services and sysadmin</td><td>Amazon Web Services and sysadmin</td></tr>
+            <tr><td>Javascript and AWS</td><td>Javascript and AWS</td></tr>
+            <tr><td>Javascript, AWS, and sysadmin</td><td>Javascript, AWS, and sysadmin</td></tr>
+            <tr><td>SQL only</td><td>SQL only</td></tr>
+            <tr><td>Python, Linux, sysadmin, and automation</td><td>Python, Linux, sysadmin, and automation</td></tr>
+            <tr><td>Python, linux, and C++</td><td>Python, linux, and C++</td></tr>
+            <tr><td>Python and AWS</td><td>Python and AWS</td></tr>
+            <tr><td>Python, AWS, and automation</td><td>Python, AWS, and automation</td></tr>
+            <tr><td>Python, AWS, linux, and automation</td><td>Python, AWS, linux, and automation</td></tr>
+            <tr><td>Python, javascript, and React.js</td><td>Python, javascript, and React.js</td></tr>
+            <tr><td>Python, SQL, and AWS</td><td>Python, SQL, and AWS</td></tr>
+            <tr><td>Java and automation</td><td>Java and automation</td></tr>
+            <tr><td>Java and linux</td><td>Java and linux</td></tr>
+            <tr><td>Java, linux, and C++</td><td>Java, linux, and C++</td></tr>
+            <tr><td>Java and SQL</td><td>Java and SQL</td></tr>
+            <tr><td>Java and Python</td><td>Java and Python</td></tr>
+            <tr><td>Java, Python, and AWS</td><td>Java, Python, and AWS</td></tr>
+            <tr><td>Java, Python, AWS, and sysadmin</td><td>Java, Python, AWS, and sysadmin</td></tr>
+          </table>
+        </section>
+        <section>
+          <h5>Intersetions with just languages</h5>
+          <button class="img-table-toggler" id="stackoverflow_sets_languages_only_png">Show data</button><br/>
+          <img src="img/py-kind-of-town/stackoverflow_sets_languages_only.png"
+               class="plain stackoverflow_sets_languages_only_png"
+               alt="Bar plot with a second diagram that annotates how set memberships and intersections work for each group. Click 'Show data' button for table."/>
+          <table class="stackoverflow_sets_languages_only_png" style="display:none;transform-origin:top center;transform:scale(0.3)">
+            <tr><th>Intersection</th><th>Count</th></tr>
+            <tr><td>Python, Java, and SQL</td><td>26</td></tr> <!-- JP Morgan Chase messed it all up, boooo -->
+            <tr><td>No languages tagged</td><td>25</td></tr>
+            <tr><td>Javascript only</td><td>12</td></tr>
+            <tr><td>Java only</td><td>8</td></tr>
+            <tr><td>Python only</td><td>5</td></tr>
+            <tr><td>Python and Java</td><td>5</td></tr>
+            <tr><td>C++ only</td><td>4</td></tr>
+            <tr><td>SQL and Javascript</td><td>2</td></tr>
+            <tr><td>Python and C++</td><td>3</td></tr>
+            <tr><td>Python and Javascript</td><td>3</td></tr>
+            <tr><td>Java and Javascript</td><td>3</td></tr>
+            <tr><td>Java, Javascript, and Scala</td><td>1</td></tr>
+            <tr><td>Java and C++</td><td>1</td></tr>
+            <tr><td>Java and SQL</td><td>1</td></tr>
+            <tr><td>Python and SQL</td><td>1</td></tr>
+            <tr><td>SQL only</td><td>1</td></tr>
+          </table>
+        </section>
+        <section>
+          <h5>GitHub Jobs (31 Dec 2018)</h5>
+          <ul>
+            <li style="width:100%;background-color:#84D6;white-space:nowrap;margin:.2em">182 U.S. postings</li>
+            <li style="width:20%;background-color:#84D6;white-space:nowrap;margin:.2em">20% Manager/Director/Project Manager jobs</li>
+            <li style="width:18%;background-color:#84D6;white-space:nowrap;margin:.2em">18% QA jobs</li>
+            <li style="width:14%;background-color:#84D6;white-space:nowrap;margin:.2em">14% Full stack jobs</li>
+            <li style="width:13%;background-color:#84D6;white-space:nowrap;margin:.2em">13% Front End jobs</li>
+            <li style="width:10%;background-color:#84D6;white-space:nowrap;margin:.2em">10% Back End jobs</li>
+            <li style="width:9%;background-color:#84D6;white-space:nowrap;margin:.2em">9% DevOps jobs</li>
+            <li style="width:9%;background-color:#84D6;white-space:nowrap;margin:.2em">9% Architect jobs</li>
+            <li style="width:5%;background-color:#84D6;white-space:nowrap;margin:.2em">5% uncategorized jobs</li>
+            <li style="width:1%;background-color:#84D6;white-space:nowrap;margin:.2em">1% Security jobs</li>
+            <li style="width:0%;background-color:#84D6;white-space:nowrap;margin:.2em">0% Data Science jobs</li>
+          </ul>
+        </section>
+        <section>
+          <h5>By language (has overlap)</h5>
+          <ul>
+            <li style="width:100%;background-color:#84D6;white-space:nowrap;margin:.2em">182 U.S. postings</li>
+            <li style="width:36%;background-color:#84D6;white-space:nowrap;margin:.2em">36% use Python</li>
+            <li style="width:36%;background-color:#84D6;white-space:nowrap;margin:.2em">36% use Javascript</li>
+            <li style="width:32%;background-color:#84D6;white-space:nowrap;margin:.2em">32% use SQL</li>
+            <li style="width:26%;background-color:#84D6;white-space:nowrap;margin:.2em">26% use Scala</li>
+            <li style="width:14%;background-color:#84D6;white-space:nowrap;margin:.2em">14% use Java</li>
+            <li style="width:10%;background-color:#84D6;white-space:nowrap;margin:.2em">10% use C++</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Not showing intersections&hellip;</h2>
+          <p>&hellip; it's getting boring 🙁</p>
+        </section>
+        <section>
+          <h1>SEC API</h1>
+          <p>Start here:<br/><a href="https://www.sec.gov/developer">sec.gov/developer</a></p>
+          <ul>
+            <li>All the forms filed by public companies are accessible on the public EDGAR API</li>
+            <li> EDGAR (Electronic Data Gathering, Analysis, and Retrieval system) <br/>
+                 <a href="https://www.sec.gov/edgar/searchedgar/accessing-edgar-data.htm">sec.gov/edgar/searchedgar/accessing-edgar-data.htm</a>
+            </li>
+          </ul>
+        </section>
+        <section>
+         <h2>EDGAR data</h2>
+         <h5>(no APIkey)</h5>
+         <ul>
+          <li>max 10 queries/sec (pretty please); else possibly block your IP</li>
+          <li>All SEC filings since 1994</li>
+          <li>HTML, JSON, and XML</li>
+          <li>need some regex to pull out the parts you want</li>
+         </ul>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            <h3>RSS subscription</h3>
+            ```python
+            import re
+            import time
+            import requests
+            import pandas as pd
+            
+            from collections import namedtuple
+            from lxml import etree
+            
+            
+            Row = namedtuple("Row", ["year", "state", "s1_count"])
+            url = "https://www.sec.gov/cgi-bin/srch-edgar"
+            s1_filings_by_state = []
+            for year in range(2008, 2019):
+                for state in ("IL", "MI", "WI", "OH", "IN"):
+                    query = dict(
+                        text=f"FORM-TYPE=S-1 and STATE-OF-INCORPORATION={state}",
+                        first=year,
+                        last=year,
+                        output="atom"
+                    )
+                    response = requests.get(url, params=query)
+                    feed = re.search(r"<feed.*feed>", response.text, re.DOTALL).group(0)
+                    root = etree.fromstring(feed)
+                    entries = root.findall("entry", namespaces=root.nsmap)
+                    s1_filings_by_state.append(Row(year=year, state=state, s1_count=len(entries)))
+                    time.sleep(.5)  # polite throttle?
+            
+            s1_filings_by_state = pd.DataFrame(s1_filings_by_state)
+            ```
+          </textarea>
+        </section>
+        <section>
+         <h2>Paid data</h2>
+         <h5>(yes APIkey)</h5>
+         <ul>
+          <li>EDGAR®Online DataFied API:
+            <ul>
+              <li>max 2 queries/sec (<a href="https://developer.edgar-online.com/docs/v1">docs</a>)</li>
+              <li>Need API key: (<a href="https://developer.edgar-online.com/member/register">developer.edgar-online.com/member/register</a>)</li>
+              <li>JSON (default) and XML</li>
+            </ul>
+          </li>
+          <li></li>
+         </ul>
+        </section>
+        <section>
+         <h3>The 'hackathon' subscription</h3>
+          <p>Available data: <a href="https://developer.edgar-online.com/docs/v1#nav12">https://developer.edgar-online.com/docs/v1#nav12</a></p>
+         <iframe title="EDGAR table of developer data." src="https://developer.edgar-online.com/docs/v1#nav12" style="width:100%;height:90%"></iframe>
+          <aside class="notes">
+            They said for 2 weeks but my API key still works and it's been over 5. It's just the free content isn't so amazing.
+          </aside>
+        </section>
+
+
+        <section>
+          <h3>Vega Example</h3>
+          https://github.com/vega/vega-embed
+          <p>Versions in this slide deck are vega@4, vega-lite@2, vega-embed@3</p>
+          <div id="vis"></div>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            ```shell
+            $ who_are_you
+            ```
+          </textarea>
+        </section>
+        <section>Slide 2</section>
+        <section data-markdown>
+          <textarea data-template>
+            ## Page title
+        
+            A paragraph with some text and a [link](http://hakim.se).
+            And an image ![image](https://media.giphy.com/media/tZ6zAdNZbWOhq/giphy.gif)
+          </textarea>
+        </section>
+      </div>
+    </div>
+    <script src="js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+    <script src="js/plugin/markdown/marked.js"></script>
+    <script src="js/plugin/markdown/markdown.js"></script>
+    <script>
+      Reveal.initialize({
+        dependencies: [{
+          src: 'js/plugin/highlight/highlight.js',
+          async: true,
+          callback: function() { hljs.initHighlightingOnLoad(); },
+          minScale: 0.1,
+	        maxScale: 1.3
+        }],
+        transition: "none"
+      });
+
+
+     // Accessible content.
+     // (toggle chart for table of data)
+     Array.from(document.getElementsByClassName("img-table-toggler"))
+       .forEach(function(toggler) {
+          toggler.onclick = function(event) {
+            Array.from(document.getElementsByClassName(event.target.id))
+              .forEach(function(element) { element.style.display = (element.style.display == "none") ? "inherit" : "none"; });
+            toggler.innerHTML = (toggler.innerHTML == "Show data") ? "Show chart" : "Show data";
+          };
+       });
+    </script>
+</html>
