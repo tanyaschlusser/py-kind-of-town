@@ -1,6 +1,6 @@
 {
-  "file": "http://tanyaschlusser.github.io/slides/data/py-kind-of-town/groups.csv",
-  "name": "Meetup Groups",
+  "file": "http://tanyaschlusser.github.io/py-kind-of-town/data/groups.csv",
+  "name": "Meetup Group Intersections",
   "header": 0,
   "separator": "|",
   "skip": 0,
@@ -23,7 +23,7 @@
     {
       "type": "boolean",
       "index": 3,
-      "name": "Hot New"
+      "name": "Hot New Technologies"
     },
     {
       "type": "boolean",
