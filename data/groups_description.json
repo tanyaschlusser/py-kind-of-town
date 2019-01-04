@@ -1,0 +1,71 @@
+{
+  "file": "http://tanyaschlusser.github.io/slides/data/py-kind-of-town/groups.csv",
+  "name": "Meetup Groups",
+  "header": 0,
+  "separator": "|",
+  "skip": 0,
+  "meta": [
+    {
+      "type": "boolean",
+      "index": 0,
+      "name": "Business"
+    },
+    {
+      "type": "boolean",
+      "index": 1,
+      "name": "Data Science"
+    },
+    {
+      "type": "boolean",
+      "index": 2,
+      "name": "General"
+    },
+    {
+      "type": "boolean",
+      "index": 3,
+      "name": "Hot New"
+    },
+    {
+      "type": "boolean",
+      "index": 4,
+      "name": "Infrastructure"
+    },
+    {
+      "type": "boolean",
+      "index": 5,
+      "name": "Js Frontend"
+    },
+    {
+      "type": "boolean",
+      "index": 6,
+      "name": "Maker"
+    },
+    {
+      "type": "boolean",
+      "index": 7,
+      "name": "Other Languages"
+    },
+    {
+      "type": "boolean",
+      "index": 8,
+      "name": "Python"
+    },
+    {
+      "type": "boolean",
+      "index": 9,
+      "name": "R"
+    },
+    {
+      "type": "boolean",
+      "index": 10,
+      "name": "Uncategorized"
+    }
+  ],
+  "sets": [
+    {
+      "format": "binary",
+      "start": 0,
+      "end": 11
+    }
+  ]
+}
