@@ -177,9 +177,6 @@
           Code to pull from Meetup API:
 
           ```python
-          import time
-          import requests
-
           api_url = "https://api.meetup.com"
           group = "DuPage-Python-Meetup"
           response = requests.get(f"{api_url}/{group}/members")
@@ -405,11 +402,6 @@
           <textarea data-template>
             <h3>Pull from RSS</h3>
             ```python
-            import re
-            import requests
-            from lxml import etree
-
-
             url = "https://www.sec.gov/rss/investor/alerts"
             response = requests.get(url)
             rss = re.search(r"<rss.*rss>", response.text, re.DOTALL).group(0)
@@ -464,7 +456,7 @@
         </section>
         <section>
             <h3>The index files</h3>
-            <pre><code class="lang-python hljs">url = "Archives/edgar/daily-index/2018/QTR4/form.20181231.idx"
+            <pre><code class="lang-python hljs">url = "https://www.sec.gov/Archives/edgar/daily-index/2018/QTR4/form.20181231.idx"
 response = requests.get(url)
 print(response.text[:2000])</code></pre>
 
@@ -495,25 +487,25 @@ Form Type   Company Name                                                  CIK
         <section>
           <h3>The Daily Archives</h3>
           <ul>
-            <li><a href="https://www.sec.gov/Archives/edgar/Feed/">/edgar/Feed</a><br/>Every literal file uploaded for the day, tarred and zipped in a directory. From what I can tell changed to XBRL format.</li>
+            <li><a href="https://www.sec.gov/Archives/edgar/Feed/">/edgar/Feed</a><br/>Every literal file uploaded for the day, tarred and zipped in a directory.</li>
             <li><a href="https://www.sec.gov/Archives/edgar/Oldloads/">/edgar/Oldloads</a><br/>Every literal file of the day, concatenated into a gargantuan zipped file.</li>
           </ul>
         </section>
         <section>
           <h2>Opinion: SEC Archive data</h2>
           <ul>
-            <li>Great for detailed research of every literal form filed ever. And to learn <a href="https://www.xbrl.org/">XBRL</a></li>
-            <li>Otherwise a pain</li>
+            <li>Great for detailed research of every literal form filed since 1994 for specific companies.</li>
+            <li>And to learn <a href="https://www.xbrl.org/">XBRL</a> by looking at filed forms.</li>
+            <li>Otherwise a pain because so many of the forms are kind of freestyle.</li>
           </ul>
         </section>
         <section>
          <h1>SEC paid data</h1>
         </section>
         <section>
-         <h4>EDGAR®Online DataFied API</h4>
+         <h3>EDGAR®Online DataFied API</h4>
          <ul>
-            <li>max 2 queries/sec (<a href="https://developer.edgar-online.com/docs/v1">docs</a>)</li>
-            <li>Need API key:<br/><a href="https://developer.edgar-online.com/member/register">developer.edgar-online.com/member/register</a></li>
+            <li><a href="https://developer.edgar-online.com/member/register">developer.edgar-online.com/member/register</a><br/>for API key. Max <a href="https://developer.edgar-online.com/docs/v1">2 queries/sec</a></li>
             <li><a href="https://developer.edgar-online.com/docs/v1#nav7">Companies Metadata</a>:<br/>SIC category, location, symbol</li>
             <li><a href="https://developer.edgar-online.com/docs/v1#nav8">Core Financials</a>:<br/>Balance Sheet, Cash Flow, Income Statement</li>
          </ul>
@@ -526,10 +518,448 @@ Form Type   Company Name                                                  CIK
             They said for 2 weeks but my API key still works and it's been over 5. It's just the free content isn't so amazing.
           </aside>
         </section>
+        <section data-markdown>
+          <textarea data-template>
+          Use the 'companies' API to get all Chicago companies
+
+          ```python
+          base_url = "http://datafied.api.edgar-online.com/v1/"
+          companies_api = base_url + "companies"
+          # Chicago !
+          query = dict(
+              cities="chicago",
+              sortby="entityid",
+              appkey=f"{apikey}",
+          )
+          response = requests.get(companies_api, params=query)
+          data = response.json()
+          pd.DataFrame(data["result"]["rowset"]).sort_values(["primaryexchange", "primarysymbol"])
+          ```
+        </textarea>
+        </section>
+        <section>
+        <h3>Chicago public companies</h3>
+<small>
+<small>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>cik</th>
+      <th>companyname</th>
+      <th>entityid</th>
+      <th>primaryexchange</th>
+      <th>primarysymbol</th>
+      <th>siccode</th>
+      <th>sicdescription</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0000730464</td>
+      <td>ADTALEM GLOBAL EDUCATION INC.</td>
+      <td>3054</td>
+      <td>NYSE</td>
+      <td>ATGE</td>
+      <td>8200</td>
+      <td>Services-Educational Services</td>
+    </tr>
+    <tr>
+      <td>0000921825</td>
+      <td>FIRST INDUSTRIAL REALTY TRUST INC</td>
+      <td>2009</td>
+      <td>NYSE</td>
+      <td>FR</td>
+      <td>6798</td>
+      <td>Real Estate Investment Trusts</td>
+    </tr>
+    <tr>
+      <td>0000047518</td>
+      <td>HILL-ROM HOLDINGS, INC.</td>
+      <td>197</td>
+      <td>NYSE</td>
+      <td>HRC</td>
+      <td>3841</td>
+      <td>Surgical and Medical Instruments and Apparatus</td>
+    </tr>
+    <tr>
+      <td>0000063908</td>
+      <td>MCDONALDS CORP</td>
+      <td>2163</td>
+      <td>NYSE</td>
+      <td>MCD</td>
+      <td>5812</td>
+      <td>Retail-Eating Places</td>
+    </tr>
+    <tr>
+      <td>0000068505</td>
+      <td>MOTOROLA SOLUTIONS, INC.</td>
+      <td>2749</td>
+      <td>NYSE</td>
+      <td>MSI</td>
+      <td>3663</td>
+      <td>Radio and Television Broadcasting and Communic...</td>
+    </tr>
+    <tr>
+      <td>0000074046</td>
+      <td>OIL-DRI CORP OF AMERICA</td>
+      <td>91</td>
+      <td>NYSE</td>
+      <td>ODC</td>
+      <td>3990</td>
+      <td>Miscellaneous Manufacturing Industries</td>
+    </tr>
+    <tr>
+      <td>0000074260</td>
+      <td>OLD REPUBLIC INTERNATIONAL CORP</td>
+      <td>3358</td>
+      <td>NYSE</td>
+      <td>ORI</td>
+      <td>6351</td>
+      <td>Surety Insurance</td>
+    </tr>
+    <tr>
+      <td>0000726513</td>
+      <td>TRIBUNE MEDIA CO</td>
+      <td>2871</td>
+      <td>NYSE</td>
+      <td>TRCO</td>
+      <td>4833</td>
+      <td>Television Broadcasting Stations</td>
+    </tr>
+    <tr>
+      <td>0000821130</td>
+      <td>UNITED STATES CELLULAR CORP</td>
+      <td>2839</td>
+      <td>NYSE</td>
+      <td>USM</td>
+      <td>4812</td>
+      <td>Radiotelephone Communications</td>
+    </tr>
+    <tr>
+      <td>0000740260</td>
+      <td>VENTAS INC</td>
+      <td>1093</td>
+      <td>NYSE</td>
+      <td>VTR</td>
+      <td>6798</td>
+      <td>Real Estate Investment Trusts</td>
+    </tr>
+    <tr>
+      <td>0000949157</td>
+      <td>CENTURY ALUMINUM CO</td>
+      <td>3220</td>
+      <td>Nasdaq Global Market</td>
+      <td>CENX</td>
+      <td>3334</td>
+      <td>Primary Production of Aluminum</td>
+    </tr>
+    <tr>
+      <td>0000702325</td>
+      <td>FIRST MIDWEST BANCORP INC</td>
+      <td>3070</td>
+      <td>Nasdaq Global Market</td>
+      <td>FMBI</td>
+      <td>6021</td>
+      <td>National Commercial Banks</td>
+    </tr>
+    <tr>
+      <td>0000100517</td>
+      <td>UNITED CONTINENTAL HOLDINGS, INC.</td>
+      <td>2471</td>
+      <td>Nasdaq Global Market</td>
+      <td>UAL</td>
+      <td>4512</td>
+      <td>Air Transportation, Scheduled</td>
+    </tr>
+    <tr>
+      <td>0000770944</td>
+      <td>BALLY TOTAL FITNESS HOLDING CORP</td>
+      <td>311</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>7997</td>
+      <td>Services-Membership Sports and Recreation Clubs</td>
+    </tr>
+    <tr>
+      <td>0000876160</td>
+      <td>BERMAN CENTER, INC.</td>
+      <td>396</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>8000</td>
+      <td>Services-Health Services</td>
+    </tr>
+    <tr>
+      <td>0001038339</td>
+      <td>EQUITY OFFICE PROPERTIES TRUST</td>
+      <td>514</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>6798</td>
+      <td>Real Estate Investment Trusts</td>
+    </tr>
+    <tr>
+      <td>0000868512</td>
+      <td>SUN-TIMES MEDIA GROUP INC</td>
+      <td>1499</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>2711</td>
+      <td>Newspapers: Publishing, or Publishing and Prin...</td>
+    </tr>
+    <tr>
+      <td>0000032870</td>
+      <td>QUIXOTE CORP</td>
+      <td>1700</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3089</td>
+      <td>Plastics Products, Not Elsewhere Classified</td>
+    </tr>
+    <tr>
+      <td>0000868984</td>
+      <td>WHITEHALL JEWELLERS INC</td>
+      <td>2173</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>5944</td>
+      <td>Retail-Jewelry Stores</td>
+    </tr>
+    <tr>
+      <td>0000216039</td>
+      <td>GRUBB &amp; ELLIS CO</td>
+      <td>2238</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>6531</td>
+      <td>Real Estate Agents and Managers (For Others)</td>
+    </tr>
+    <tr>
+      <td>0000924940</td>
+      <td>DIAMOND MANAGEMENT &amp; TECHNOLOGY CONSULTANTS, INC.</td>
+      <td>3168</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>8742</td>
+      <td>Services-Management Consulting Services</td>
+    </tr>
+    <tr>
+      <td>0000077385</td>
+      <td>PEOPLES ENERGY CORP</td>
+      <td>3204</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>4924</td>
+      <td>Natural Gas Distribution</td>
+    </tr>
+  </tbody>
+</table>
+</small>
+</small>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+          Find the Sears ticker symbol using the API
+
+          ```python
+          base_url = "http://datafied.api.edgar-online.com/v1/"
+          companies_api = base_url + "companies"
+          query = dict(
+              companynames="*sears*",  # Sears
+              sortby="entityid",
+              appkey=f"{apikey}",
+          )
+          response = requests.get(companies_api, params=query)
+          data = response.json()
+          ```
+        </textarea>
+        </section>
+        <section>
+        It's the second entry: SHLDQ
+<code style="font-size:.6em"><pre>
+{
+  "result": {
+    "limit": 25,
+    "offset": 0,
+    "totalrows": 6,
+    "rowset": [
+      {
+        "entityid": 7311,
+        "cik": "0000319256",
+        "companyname": "SEARS ROEBUCK & CO",
+        "siccode": "5311",
+        "sicdescription": "Retail-Department Stores",
+        "rownum": 1
+      },
+      {
+        "entityid": 656789,
+        "cik": "0001310067",
+        "companyname": "SEARS HOLDINGS CORP",
+        "primaryexchange": "OTC",
+        "primarysymbol": "SHLDQ",
+        "siccode": "5311",
+        "sicdescription": "Retail-Department Stores",
+        "rownum": 2
+      },
+      .
+      .  # etc..
+      .
+  }
+}
+</pre></code>
+        <div class="fragment" style="position:absolute;top:7.5em;left:2.5em" aria-hidden>
+        <svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg" style="width:350;height:175;overflow:visible;">
+          <ellipse cx="100" cy="50" rx="100" ry="50" style="fill:none;stroke:#c15;stroke-width:5;"/>
+        </svg>
+        </div>
+        </section>
+        <section>
+        The metadata and header fields do what they say: label the rows. Some of it parsed:
+<code style="font-size:.6em"><pre>
+******************** metadata ********************
+      field     label    type value
+0  duration  Duration  string   ANN
+0  duration  Duration  string   ANN
+0  duration  Duration  string   ANN
+0  duration  Duration  string   ANN
+
+******************** headers ********************
+           field            label     type      value
+0  PeriodEndDate  Period End Date     date   2/3/2018
+1     fiscalYear      Fiscal Year  integer       2018
+2  FiscalQuarter   Fiscal Quarter  integer          4
+0  PeriodEndDate  Period End Date     date  1/28/2017
+1     fiscalYear      Fiscal Year  integer       2017
+</pre></code>
+        </section>
+        <section>
+        <h2>Core Financials API</h2>
+        <p>Free <a href="https://developer.edgar-online.com/docs/v1#nav6">concept groups</a> collect common query terms together:</p>
+        <ul>
+          <li>Balance Sheet</li>
+          <li>Cash Flow</li>
+          <li>Income Statement</li>
+          <li>Valuation, Profitability, Leverage mini-ratios<br/>(mini as in less detail than paid version)</li>
+        </ul>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            Every query is a variant of this:
+            ```python
+            base_url = "http://datafied.api.edgar-online.com/v1/"
+            financials_api = base_url + "corefinancials"
+            
+            query = dict(
+                primarysymbols="SHLDQ",
+                conceptgroups="CashFlowStatementConsolidated",
+                appkey=apikey
+            )
+            response = requests.get(financials_api, params=query)
+            dataset = response.json()
+
+ 
+            def has_term(conceptgroup, term):
+              return any(term.lower() in c.lower() for c in conceptgroup)
+           
+            cash_flow = pd.concat(
+                pd.DataFrame(groups["rowset"]).assign(
+                    fiscalyear=groups["fiscalyear"],
+                    fiscalquarter=groups["fiscalquarter"]
+                )
+                for rowset in dataset["result"]["rowset"]
+                for groups in rowset["groups"] if has_term(groups["conceptgroups"], "cash")
+            )
+            ```
+          </textarea>
+        </section>
+        <section>
+        <h3>Output looks Excel-ready &hellip;</h3>
+<small><small>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>field</th>
+      <th>label</th>
+      <th>precision</th>
+      <th>type</th>
+      <th>value</th>
+      <th>fiscalyear</th>
+      <th>fiscalquarter</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ChangeinCurrentAssets</td>
+      <td>Change in Current Assets</td>
+      <td>0</td>
+      <td>decimal</td>
+      <td>1.922000e+09</td>
+      <td>2018</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>ChangeinCurrentLiabilities</td>
+      <td>Change in Current Liabilities</td>
+      <td>0</td>
+      <td>decimal</td>
+      <td>-4.720000e+08</td>
+      <td>2018</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>ChangeinDebtNet</td>
+      <td>Change in Debt, Net</td>
+      <td>0</td>
+      <td>decimal</td>
+      <td>4.100000e+07</td>
+      <td>2018</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>ChangeinInventories</td>
+      <td>Change in Inventories</td>
+      <td>0</td>
+      <td>decimal</td>
+      <td>1.144000e+09</td>
+      <td>2018</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>ChangeinOperatingAssetsLiabilities</td>
+      <td>Change in Operating Assets &amp; Liabilities</td>
+      <td>0</td>
+      <td>decimal</td>
+      <td>9.160000e+08</td>
+      <td>2018</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+</small></small>
+        </section>
+        <section>
+        <h3>Sears vs other retailer debt-to-equity</h3>
+          <button class="img-table-toggler" id="retailer_debt_equity_png">Show data</button><br/>
+          <img src="img/retailer_debt_equity.png"
+               class="plain retailer_debt_equity_png"
+               alt="Line plot showing the count of S-1 filings descend over time. Click 'Show data' button for table."/>
+          <table class="retailer_debt_equity_png" style="display:none;transform-origin:top center;transform:scale(0.4)">
+            <tr><th>fiscalyear</th><th>BONTQ</th><th>BURL</th><th>DDS</th><th>JCP</th><th>KSS</th><th>M</th><th>SHLDQ</th></tr>
+            <tr><td>2014</td><td>6.8</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td></tr>
+            <tr><td>2015</td><td>10.4</td><td>-19.0</td><td>0.4</td><td>2.8</td><td>0.8</td><td>1.4</td><td>--</td></tr>
+            <tr><td>2016</td><td>28.3</td><td>-13.1</td><td>0.5</td><td>3.7</td><td>0.9</td><td>1.8</td><td>--</td></tr>
+            <tr><td>2017</td><td>-43.4</td><td>-22.7</td><td>0.5</td><td>3.6</td><td>0.9</td><td>1.6</td><td>--</td></tr>
+            <tr><td>2018</td><td>--</td><td>13.0</td><td>0.4</td><td>3.1</td><td>0.8</td><td>1.0</td><td>-1.3</td></tr>
+          </table>
+        </section>
+        <section>
+        <h3>Look up Burlington</h3>
+        <p>recent news is positive:</p>
+        <iframe title="Zacks December review of Burlington" src="https://www.zacks.com/stock/news/343533/burlington-stores-business-model-amp-sturdy-comps-bode-well" style="width:100%;height:90%"></iframe>
+        </section>
 
         <section>
         </section>
-
 
       </div>
     </div>
