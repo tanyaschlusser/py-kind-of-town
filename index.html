@@ -15,7 +15,7 @@
           <p>@tanyaschlusser—DuPage Python Meetup
             <ul>
               <li>slides: <a href="https://bit.ly/py-town-dupage">bit.ly/py-town-dupage</a></li>
-              <li><a href="https://github.com/tanyaschlusser/py-kind-of-town">GitHub repo with starter notebooks</a></li>
+              <li><a href="https://github.com/tanyaschlusser/py-kind-of-town">github.com/tanyaschlusser/py-kind-of-town</a></li>
             </ul>
           </p>
         </section>
@@ -433,7 +433,7 @@
         </small>
         </section>
         <section>
-        <h3>S1 filing data from search RSS</h3>
+        <h3>S1 filing data from:</h3>
         <p><a href="https://www.sec.gov/cgi-bin/srch-edgar">sec.gov/cgi-bin/srch-edgar</a></p>
           <button class="img-table-toggler" id="s1_filings_since_2008_png">Show data</button><br/>
           <img src="img/s1_filings_since_2008.png"
@@ -492,11 +492,11 @@ Form Type   Company Name                                                  CIK
           </ul>
         </section>
         <section>
-          <h2>Opinion: SEC Archive data</h2>
+          <h2>SEC Archive data is:</h2>
           <ul>
-            <li>Great for detailed research of every literal form filed since 1994 for specific companies.</li>
-            <li>And to learn <a href="https://www.xbrl.org/">XBRL</a> by looking at filed forms.</li>
-            <li>Otherwise a pain because so many of the forms are kind of freestyle.</li>
+            <li>Great for detailed research of every single SEC form filed since 1994.</li>
+            <li>A slight pain because so many of the forms are kind of freestyle text.</li>
+            <li>When the form's <a href="https://www.xbrl.org/">XBRL</a> you just write the parser once and done!</li>
           </ul>
         </section>
         <section>
@@ -814,7 +814,7 @@ Form Type   Company Name                                                  CIK
         </div>
         </section>
         <section>
-        The metadata and header fields do what they say: label the rows. Some of it parsed:
+        The metadata and header fields do what they say—label the rows. Here are some:
 <code style="font-size:.6em"><pre>
 ******************** metadata ********************
       field     label    type value
@@ -834,7 +834,7 @@ Form Type   Company Name                                                  CIK
         </section>
         <section>
         <h2>Core Financials API</h2>
-        <p>Free <a href="https://developer.edgar-online.com/docs/v1#nav6">concept groups</a> collect common query terms together:</p>
+        <p>Free <a href="https://developer.edgar-online.com/docs/v1#nav6">concept groups</a> group related terms together:</p>
         <ul>
           <li>Balance Sheet</li>
           <li>Cash Flow</li>
@@ -844,10 +844,9 @@ Form Type   Company Name                                                  CIK
         </section>
         <section data-markdown>
           <textarea data-template>
-            Every query is a variant of this:
+            Every query is a variant of:
             ```python
-            base_url = "http://datafied.api.edgar-online.com/v1/"
-            financials_api = base_url + "corefinancials"
+            financials_api = "http://datafied.api.edgar-online.com/v1/corefinancials"
             
             query = dict(
                 primarysymbols="SHLDQ",
@@ -856,8 +855,60 @@ Form Type   Company Name                                                  CIK
             )
             response = requests.get(financials_api, params=query)
             dataset = response.json()
-
- 
+            ```
+          </textarea>
+        </section>
+        <section>
+        The output looks like
+<code style="font-size:.6em"><pre>
+{
+  "result": {
+    "limit": 25,
+    "offset": 0,
+    "totalrows": 4,
+    "duration": "ANN",
+    "rowset": [
+      {
+        "rownum": 1,
+        "entityid": 656789,
+        "groups": [
+          {
+            "conceptgroups": [
+              "IncomeStatementConsolidated",
+              "IncomeStatementFull",
+              "PrimaryFinancials"
+            ],
+            "fiscalyear": 2018,
+            "fiscalquarter": 4,
+            "rowset": [
+              {
+                "precision": 0,
+                "type": "decimal",
+                "field": "EBIT",
+                "value": -2078000000.0,
+                "label": "EBIT"
+              },
+              {
+                "precision": 0,
+                "type": "decimal",
+                "field": "CostofRevenue",
+                "value": 13175000000.0,
+                "label": "Cost of Revenue"
+              },
+              .
+              .
+              .
+            ]
+        }, ... ]
+    }, ... ]
+  }, ...
+}
+</pre></code>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+            Which can be converted to a Pandas DataFrame:
+            ```python
             def has_term(conceptgroup, term):
               return any(term.lower() in c.lower() for c in conceptgroup)
            
@@ -873,7 +924,7 @@ Form Type   Company Name                                                  CIK
           </textarea>
         </section>
         <section>
-        <h3>Output looks Excel-ready &hellip;</h3>
+        <h3>Pandas can then go to Excel &hellip;</h3>
 <small><small>
 <table border="1" class="dataframe">
   <thead>
@@ -938,13 +989,420 @@ Form Type   Company Name                                                  CIK
 </small></small>
         </section>
         <section>
-        <h3>Sears vs other retailer debt-to-equity</h3>
+        <h2>Mini-project?</h2>
+        <p>Keeping with the Chicago theme, try looking at Sears and its competitors</a>
+        <ul>
+          <li>Identify competitors (same SIC code)</li>
+          <li>Look up debt-to-equity ratio</li>
+          <li>Compare across competitors</li>
+        </ul>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+          <h3>Pull Sears competitors</h3>
+          <p>(same SIC code)</p>
+            ```python
+            companies_api = "http://datafied.api.edgar-online.com/v1/companies"
+            query = dict(
+                siccodes="5311",  # Like Sears
+                sortby="entityid",
+                appkey=f"{apikey}",
+            )
+            response = requests.get(companies_api, params=query)
+            dataset = response.json()
+
+            pd.DataFrame(dataset["result"]["rowset"]).sort_values(["primaryexchange", "primarysymbol"])
+            ```
+          </textarea>
+        </section>
+        <section>
+          <h3>Sears competitors</h3>        
+<small><small>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>cik</th>
+      <th>companyname</th>
+      <th>primaryexchange</th>
+      <th>primarysymbol</th>
+      <th>siccode</th>
+      <th>sicdescription</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0001579298</td>
+      <td>BURLINGTON STORES, INC.</td>
+      <td>NYSE</td>
+      <td>BURL</td>
+      <td>5311</td>
+      <td>Retail-Department Stores</td>
+    </tr>
+    <tr>
+      <td>0000028917</td>
+      <td>DILLARD'S, INC.</td>
+      <td>NYSE</td>
+      <td>DDS</td>
+      <td>5311</td>
+      <td>Retail-Department Stores</td>
+    </tr>
+    <tr>
+      <td>0001166126</td>
+      <td>J C PENNEY CO INC</td>
+      <td>NYSE</td>
+      <td>JCP</td>
+      <td>5311</td>
+      <td>Retail-Department Stores</td>
+    </tr>
+    <tr>
+      <td>0000885639</td>
+      <td>KOHLS CORP</td>
+      <td>NYSE</td>
+      <td>KSS</td>
+      <td>5311</td>
+      <td>Retail-Department Stores</td>
+    </tr>
+    <tr>
+      <td>0000794367</td>
+      <td>MACY'S, INC.</td>
+      <td>NYSE</td>
+      <td>M</td>
+      <td>5311</td>
+      <td>Retail-Department Stores</td>
+    </tr>
+    <tr>
+      <td>0001548309</td>
+      <td>SEARS HOMETOWN &amp; OUTLET STORES, INC.</td>
+      <td>Nasdaq Capital Market</td>
+      <td>SHOS</td>
+      <td>5311</td>
+      <td>Retail-Department Stores</td>
+    </tr>
+    <tr>
+      <td>0000878079</td>
+      <td>BON TON STORES INC</td>
+      <td>OTC</td>
+      <td>BONTQ</td>
+      <td>5311</td>
+      <td>Retail-Department Stores</td>
+    </tr>
+    <tr>
+      <td>0001310067</td>
+      <td>SEARS HOLDINGS CORP</td>
+      <td>OTC</td>
+      <td>SHLDQ</td>
+      <td>5311</td>
+      <td>Retail-Department Stores</td>
+    </tr>
+    <tr>
+      <td>0001550910</td>
+      <td>SEARS CANADA INC.</td>
+      <td>OTC</td>
+      <td>SRSCQ</td>
+      <td>5311</td>
+      <td>Retail-Department Stores</td>
+    </tr>
+    <tr>
+      <td>0000063416</td>
+      <td>MAY DEPARTMENT STORES CO</td>
+      <td></td>
+      <td></td>
+      <td>5311</td>
+      <td>Retail-Department Stores</td>
+    </tr>
+    <tr>
+      <td>0000790414</td>
+      <td>GOTTSCHALKS INC</td>
+      <td></td>
+      <td></td>
+      <td>5311</td>
+      <td>Retail-Department Stores</td>
+    </tr>
+    <tr>
+      <td>0000319256</td>
+      <td>SEARS ROEBUCK &amp; CO</td>
+      <td></td>
+      <td></td>
+      <td>5311</td>
+      <td>Retail-Department Stores</td>
+    </tr>
+    <tr>
+      <td>0000819539</td>
+      <td>NEIMAN MARCUS GROUP INC</td>
+      <td></td>
+      <td></td>
+      <td>5311</td>
+      <td>Retail-Department Stores</td>
+    </tr>
+    <tr>
+      <td>0000718916</td>
+      <td>BURLINGTON COAT FACTORY WAREHOUSE CORP</td>
+      <td></td>
+      <td></td>
+      <td>5311</td>
+      <td>Retail-Department Stores</td>
+    </tr>
+    <tr>
+      <td>0000812900</td>
+      <td>SAKS INC</td>
+      <td></td>
+      <td></td>
+      <td>5311</td>
+      <td>Retail-Department Stores</td>
+    </tr>
+    <tr>
+      <td>0001051771</td>
+      <td>BELK INC</td>
+      <td></td>
+      <td></td>
+      <td>5311</td>
+      <td>Retail-Department Stores</td>
+    </tr>
+    <tr>
+      <td>0001016837</td>
+      <td>ALON BLUE SQUARE ISRAEL LTD</td>
+      <td></td>
+      <td></td>
+      <td>5311</td>
+      <td>Retail-Department Stores</td>
+    </tr>
+    <tr>
+      <td>0001358651</td>
+      <td>NEIMAN MARCUS GROUP LTD LLC</td>
+      <td></td>
+      <td></td>
+      <td>5311</td>
+      <td>Retail-Department Stores</td>
+    </tr>
+    <tr>
+      <td>0001368775</td>
+      <td>BURLINGTON COAT FACTORY INVESTMENTS HOLDINGS, ...</td>
+      <td></td>
+      <td></td>
+      <td>5311</td>
+      <td>Retail-Department Stores</td>
+    </tr>
+    <tr>
+      <td>0001644147</td>
+      <td>NEIMAN MARCUS GROUP, INC.</td>
+      <td></td>
+      <td></td>
+      <td>5311</td>
+      <td>Retail-Department Stores</td>
+    </tr>
+  </tbody>
+</table>
+</small></small>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+          <h3>Pull debt-to-equity ratio</h3>
+          <p>Specify the 'fields' if you want a specific field.</p>
+          ```python
+          symbols = ",".join(sears_competitors.primarysymbol.dropna())
+
+          financials_api = "http://datafied.api.edgar-online.com/v1/corefinancials"
+          query = dict(
+              primarysymbols=symbols,
+              fields="DebttoEquity,primarysymbol",  # Specify fields
+              appkey=apikey
+          )
+          
+          response = requests.get(financials_api, params=query)
+          dataset = response.json()
+          ```
+          </textarea>
+        </section>
+        <section data-markdown>
+          <textarea data-template>
+          <h3>JSON to Data Frame</h3>
+          <p>Slightly more involved than before to ID each company.</p>
+```python
+def next_one(groups, term):
+    return next(g for g in groups if has_term(group["conceptgroups"], term))
+
+dataframes = []
+for rowset in dataset["result"]["rowset"]:
+    metadata_group = next_one(rowset["groups"], "meta")
+    symbol_data = next(
+        entry for entry in metadata_group["rowset"] if entry["field"] == "PRIMARYSYMBOL"
+    )
+    primarysymbol = symbol_data["value"]
+    ratio_group = next_one(rowset["groups"], "ratio")
+    dataframes.append(
+        pd.DataFrame(ratio_group["rowset"])
+            .assign(
+                year=ratio_group["fiscalyear"],
+                quarter=ratio_group["fiscalquarter"],
+                symbol=primarysymbol)
+            .drop(columns=["precision", "type", "field"])
+    )
+
+sears_competitors_debt_equity = pd.concat(dataframes)
+```
+          </textarea>
+        </section>
+        <section>
+<p>Some of the results</p>
+<small><small>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>label</th>
+      <th>value</th>
+      <th>fiscalyear</th>
+      <th>fiscalquarter</th>
+      <th>primarysymbol</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Debt to Equity</td>
+      <td>-43.42737</td>
+      <td>2017</td>
+      <td>4</td>
+      <td>BONTQ</td>
+    </tr>
+    <tr>
+      <td>Debt to Equity</td>
+      <td>28.29829</td>
+      <td>2016</td>
+      <td>4</td>
+      <td>BONTQ</td>
+    </tr>
+    <tr>
+      <td>Debt to Equity</td>
+      <td>10.34511</td>
+      <td>2015</td>
+      <td>4</td>
+      <td>BONTQ</td>
+    </tr>
+    <tr>
+      <td>Debt to Equity</td>
+      <td>12.98744</td>
+      <td>2018</td>
+      <td>4</td>
+      <td>BURL</td>
+    </tr>
+    <tr>
+      <td>Debt to Equity</td>
+      <td>-22.69495</td>
+      <td>2017</td>
+      <td>4</td>
+      <td>BURL</td>
+    </tr>
+    <tr>
+      <td>Debt to Equity</td>
+      <td>-13.09372</td>
+      <td>2016</td>
+      <td>4</td>
+      <td>BURL</td>
+    </tr>
+    <tr>
+      <td>Debt to Equity</td>
+      <td>0.42753</td>
+      <td>2018</td>
+      <td>4</td>
+      <td>DDS</td>
+    </tr>
+    <tr>
+      <td>Debt to Equity</td>
+      <td>0.47782</td>
+      <td>2017</td>
+      <td>4</td>
+      <td>DDS</td>
+    </tr>
+    <tr>
+      <td>Debt to Equity</td>
+      <td>0.45876</td>
+      <td>2016</td>
+      <td>4</td>
+      <td>DDS</td>
+    </tr>
+    <tr>
+      <td>Debt to Equity</td>
+      <td>3.06889</td>
+      <td>2018</td>
+      <td>4</td>
+      <td>JCP</td>
+    </tr>
+    <tr>
+      <td>Debt to Equity</td>
+      <td>3.57164</td>
+      <td>2017</td>
+      <td>4</td>
+      <td>JCP</td>
+    </tr>
+    <tr>
+      <td>Debt to Equity</td>
+      <td>3.67074</td>
+      <td>2016</td>
+      <td>4</td>
+      <td>JCP</td>
+    </tr>
+    </tr>
+    <tr>
+      <td>Debt to Equity</td>
+      <td>0.83192</td>
+      <td>2018</td>
+      <td>4</td>
+      <td>KSS</td>
+    </tr>
+    <tr>
+      <td>Debt to Equity</td>
+      <td>0.89067</td>
+      <td>2017</td>
+      <td>4</td>
+      <td>KSS</td>
+    </tr>
+    <tr>
+      <td>Debt to Equity</td>
+      <td>0.85740</td>
+      <td>2016</td>
+      <td>4</td>
+      <td>KSS</td>
+    </tr>
+    </tr>
+    <tr>
+      <td>Debt to Equity</td>
+      <td>1.03702</td>
+      <td>2018</td>
+      <td>4</td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>Debt to Equity</td>
+      <td>1.58941</td>
+      <td>2017</td>
+      <td>4</td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>Debt to Equity</td>
+      <td>1.79694</td>
+      <td>2016</td>
+      <td>4</td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>Debt to Equity</td>
+      <td>-1.33092</td>
+      <td>2018</td>
+      <td>4</td>
+      <td>SHLDQ</td>
+    </tr>
+  </tbody>
+</table>
+</small></small>
+        </section>
+        <section>
+        <h3>Plotted</h3>
           <button class="img-table-toggler" id="retailer_debt_equity_png">Show data</button><br/>
           <img src="img/retailer_debt_equity.png"
                class="plain retailer_debt_equity_png"
                alt="Line plot showing the count of S-1 filings descend over time. Click 'Show data' button for table."/>
           <table class="retailer_debt_equity_png" style="display:none;transform-origin:top center;transform:scale(0.4)">
-            <tr><th>fiscalyear</th><th>BONTQ</th><th>BURL</th><th>DDS</th><th>JCP</th><th>KSS</th><th>M</th><th>SHLDQ</th></tr>
+            <tr><th>fiscal year</th><th>BONTQ</th><th>BURL</th><th>DDS</th><th>JCP</th><th>KSS</th><th>M</th><th>SHLDQ</th></tr>
             <tr><td>2014</td><td>6.8</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td></tr>
             <tr><td>2015</td><td>10.4</td><td>-19.0</td><td>0.4</td><td>2.8</td><td>0.8</td><td>1.4</td><td>--</td></tr>
             <tr><td>2016</td><td>28.3</td><td>-13.1</td><td>0.5</td><td>3.7</td><td>0.9</td><td>1.8</td><td>--</td></tr>
@@ -953,14 +1411,56 @@ Form Type   Company Name                                                  CIK
           </table>
         </section>
         <section>
-        <h3>Look up Burlington</h3>
-        <p>recent news is positive:</p>
-        <iframe title="Zacks December review of Burlington" src="https://www.zacks.com/stock/news/343533/burlington-stores-business-model-amp-sturdy-comps-bode-well" style="width:100%;height:90%"></iframe>
+        <h3>Whaa? 😕</h3>
+        <p>Some articles say <a href="https://www.zacks.com/stock/news/343533/burlington-stores-business-model-amp-sturdy-comps-bode-well">Burlington is doing OK</a>.
+          We know Bonton went bankrupt.
+          Analysts are <a href="https://seekingalpha.com/article/4230872-dillards-still-room-downside">panning Dillard's</a>.
+          Are these numbers wild or do I just not understand retail? (seems like the latter)</p>
         </section>
-
         <section>
+        <h3>Current Ratio</h3>
+          <button class="img-table-toggler" id="retailer_current_ratio_png">Show data</button><br/>
+          <img src="img/retailer_current_ratio.png"
+               class="plain retailer_current_ratio_png"
+               alt="Line plot showing the count of S-1 filings descend over time. Click 'Show data' button for table."/>
+          <table class="retailer_current_ratio_png" style="display:none;transform-origin:top center;transform:scale(0.4)">
+            <tr><th>fiscal year</th><th>BONTQ</th><th>BURL</th><th>DDS</th><th>JCP</th><th>KSS</th><th>M</th><th>SHLDQ</th></tr>
+            <tr><td>2014</td><td>1.91885</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td></tr>
+            <tr><td>2015</td><td>2.05929</td><td>1.05826</td><td>2.35865</td><td>2.00881</td><td>1.95173</td><td>1.69064</td><td>--</td></tr>
+            <tr><td>2016</td><td>2.37071</td><td>1.05233</td><td>2.22165</td><td>1.66584</td><td>1.87030</td><td>1.33589</td><td>--</td></tr>
+            <tr><td>2017</td><td>2.24957</td><td>0.93127</td><td>1.88213</td><td>1.61265</td><td>1.76429</td><td>1.35045</td><td>--</td></tr>
+            <tr><td>2018</td><td>--</td><td>0.98285</td><td>1.66380</td><td>1.46226</td><td>2.01094</td><td>1.46680</td><td>0.77558</td></tr>
+          </table>
         </section>
-
+        <section>
+        <h3>Net Income Per Employee</h3>
+          <button class="img-table-toggler" id="retailer_net_income_per_employee_png">Show data</button><br/>
+          <img src="img/retailer_net_income_per_employee.png"
+               class="plain retailer_net_income_per_employee_png"
+               alt="Line plot showing the count of S-1 filings descend over time. Click 'Show data' button for table."/>
+          <table class="retailer_net_income_per_employee_png" style="display:none;transform-origin:top center;transform:scale(0.4)">
+            <tr><th>fiscal year</th><th>BONTQ</th><th>BURL</th><th>DDS</th><th>JCP</th><th>KSS</th><th>M</th><th>SHLDQ</th></tr>
+            <tr><td>2014</td><td>-138.0</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td></tr>
+            <tr><td>2015</td><td>-277.0</td><td>1940.0</td><td>8296.0</td><td>-6289.0</td><td>27094.0</td><td>9143.0</td><td>--</td></tr>
+            <tr><td>2016</td><td>-2367.0</td><td>4013.0</td><td>6734.0</td><td>-4886.0</td><td>21031.0</td><td>6789.0</td><td>--</td></tr>
+            <tr><td>2017</td><td>-2722.0</td><td>5397.0</td><td>4231.0</td><td>9.0</td><td>17375.0</td><td>4174.0</td><td>--</td></tr>
+            <tr><td>2018</td><td>--</td><td>9621.0</td><td>5533.0</td><td>-1184.0</td><td>26030.0</td><td>11900.0</td><td>-4303.0</td></tr>
+          </table>
+        </section>
+        <section>
+          <h2>Conclusion</h2>
+          <ul>
+            <li>All you need is an API key, requests, and some knowledge of Pandas and JSON to get lots of financial data.</li>
+            <li>If you want to read the SEC filings you'll also need some LXML skills.<br/>(but not too much see my stuff)</li>
+          </ul>
+        </section>
+        <section>
+          <h1>Thank you</h1>
+          <ul>
+              <li>slides: <a href="https://bit.ly/py-town-dupage">bit.ly/py-town-dupage</a></li>
+              <li><a href="https://github.com/tanyaschlusser/py-kind-of-town">github.com/tanyaschlusser/py-kind-of-town</a></li>
+          </ul>
+        </section>
       </div>
     </div>
     <script src="js/head.min.js"></script>
